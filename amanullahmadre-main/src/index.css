@@ -1,0 +1,350 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.75rem;
+
+    /* Custom tokens */
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(199 89% 48%));
+    --gradient-hero: linear-gradient(180deg, hsl(210 40% 98%) 0%, hsl(0 0% 100%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
+    --shadow-soft: 0 4px 6px -1px hsl(222 47% 11% / 0.05), 0 2px 4px -2px hsl(222 47% 11% / 0.05);
+    --shadow-medium: 0 10px 15px -3px hsl(222 47% 11% / 0.08), 0 4px 6px -4px hsl(222 47% 11% / 0.05);
+    --shadow-large: 0 20px 25px -5px hsl(222 47% 11% / 0.1), 0 8px 10px -6px hsl(222 47% 11% / 0.08);
+    --shadow-glow: 0 0 40px hsl(217 91% 60% / 0.15);
+
+    --nav-height: 80px;
+  }
+
+  .dark {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 217 91% 60%;
+
+    --gradient-hero: linear-gradient(180deg, hsl(222 47% 6%) 0%, hsl(222 47% 9%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(222 47% 9%) 0%, hsl(222 47% 11%) 100%);
+    --shadow-soft: 0 4px 6px -1px hsl(0 0% 0% / 0.3), 0 2px 4px -2px hsl(0 0% 0% / 0.2);
+    --shadow-medium: 0 10px 15px -3px hsl(0 0% 0% / 0.4), 0 4px 6px -4px hsl(0 0% 0% / 0.3);
+    --shadow-large: 0 20px 25px -5px hsl(0 0% 0% / 0.5), 0 8px 10px -6px hsl(0 0% 0% / 0.4);
+    --shadow-glow: 0 0 40px hsl(217 91% 60% / 0.2);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  code, pre {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@layer components {
+  .section-container {
+    @apply max-w-6xl mx-auto px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-20 lg:py-28;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-primary);
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-large);
+  }
+
+  .glass-effect {
+    @apply backdrop-blur-md bg-background/80 border border-border/50;
+  }
+
+  /* ---------------------------------------------------------------------- */
+  /* Liquid Glass system                                                    */
+  /* Real refraction (SVG feDisplacementMap, applied via inline filter on   */
+  /* the panel) + a pointer-tracked specular highlight + a thin rim light,  */
+  /* rather than a flat blurred/tinted rectangle.                           */
+  /* ---------------------------------------------------------------------- */
+
+  .liquid-glass-defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .liquid-glass-panel {
+    position: relative;
+    display: block;
+    isolation: isolate;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .liquid-glass-panel {
+      transition: none !important;
+      transform: none !important;
+    }
+  }
+
+  /* Layer 1 — blur: samples the page behind the panel via backdrop-filter,
+     filled with a translucent tint. No border, no box-shadow, no SVG filter:
+     this layer's only job is to be the thing the distortion layer bends. */
+  .liquid-glass-blur {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    background: linear-gradient(
+      155deg,
+      hsl(var(--background) / 0.55) 0%,
+      hsl(var(--background) / 0.25) 50%,
+      hsl(var(--background) / 0.45) 100%
+    );
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    backdrop-filter: blur(18px) saturate(160%);
+  }
+
+  .dark .liquid-glass-blur {
+    background: linear-gradient(
+      155deg,
+      hsl(var(--background) / 0.45) 0%,
+      hsl(var(--background) / 0.2) 50%,
+      hsl(var(--background) / 0.4) 100%
+    );
+  }
+
+  /* Layer 2 — distort: the ONLY element carrying the SVG displacement
+     filter. It paints a faint tint of its own (so there's something visible
+     to refract beyond what bleeds through the blur layer below it) but has
+     no border or box-shadow, so the filter never warps an edge line. */
+  .liquid-glass-distort {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    background: linear-gradient(
+      155deg,
+      hsl(0 0% 100% / 0.06) 0%,
+      hsl(0 0% 100% / 0) 50%,
+      hsl(0 0% 100% / 0.05) 100%
+    );
+  }
+
+  /* Layer 3 — chrome: the crisp border + box-shadow. Completely filter-free,
+     so the panel's edge always stays a clean, straight rounded rectangle
+     no matter how strong the refraction on the layers beneath it is. */
+  .liquid-glass-chrome {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    border: 1px solid hsl(var(--foreground) / 0.08);
+    box-shadow:
+      0 8px 32px hsl(222 47% 11% / 0.08),
+      inset 0 1px 0 hsl(0 0% 100% / 0.4),
+      inset 0 -1px 0 hsl(var(--foreground) / 0.04);
+    transition: box-shadow 0.35s ease, border-color 0.35s ease;
+  }
+
+  .dark .liquid-glass-chrome {
+    border-color: hsl(0 0% 100% / 0.08);
+    box-shadow:
+      0 8px 32px hsl(0 0% 0% / 0.35),
+      inset 0 1px 0 hsl(0 0% 100% / 0.06),
+      inset 0 -1px 0 hsl(0 0% 0% / 0.2);
+  }
+
+  .liquid-glass-panel:hover .liquid-glass-chrome {
+    border-color: hsl(var(--primary) / 0.35);
+    box-shadow:
+      0 16px 48px hsl(222 47% 11% / 0.12),
+      0 0 0 1px hsl(var(--primary) / 0.08),
+      inset 0 1px 0 hsl(0 0% 100% / 0.5);
+  }
+
+  /* Specular highlight: a soft light patch that tracks the pointer,
+     mimicking a curved surface catching light at an angle. */
+  .liquid-glass-specular {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    transition: background 0.12s linear;
+    z-index: 1;
+  }
+
+  /* Rim light: a thin bright edge, brightest top-left, the way light
+     wraps the lip of a glass lens. */
+  .liquid-glass-rim {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    box-shadow:
+      inset 1px 1px 0 hsl(0 0% 100% / 0.35),
+      inset -1px -1px 0 hsl(0 0% 100% / 0.08);
+  }
+
+  .dark .liquid-glass-rim {
+    box-shadow:
+      inset 1px 1px 0 hsl(0 0% 100% / 0.12),
+      inset -1px -1px 0 hsl(0 0% 0% / 0.3);
+  }
+
+  .liquid-glass-content {
+    position: relative;
+    z-index: 2;
+    display: block;
+  }
+
+  /* Glass card: compact liquid glass panel for badges, stat tiles, tags */
+  .glass-card {
+    @apply rounded-2xl p-6;
+  }
+
+  .skill-tag {
+    @apply px-4 py-2 rounded-full text-sm font-medium bg-secondary text-secondary-foreground 
+           border border-border transition-all duration-200 hover:bg-primary hover:text-primary-foreground 
+           hover:border-primary cursor-default;
+  }
+
+  .nav-link {
+    @apply text-muted-foreground hover:text-foreground transition-colors duration-200 
+           text-sm font-medium relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-200;
+  }
+
+  .nav-link:hover::after {
+    @apply w-full;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium
+           bg-primary text-primary-foreground transition-all duration-200
+           hover:opacity-90 hover:shadow-lg;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium
+           border-2 border-border text-foreground transition-all duration-200
+           hover:border-primary hover:text-primary;
+  }
+
+  /* Liquid Glass buttons — chrome (blur/specular/rim) comes from the
+     LiquidGlass wrapper component; these classes only add button-specific
+     sizing, type, and the primary color tint layered under the glass. */
+  .btn-glass {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 font-semibold
+           text-foreground cursor-pointer select-none;
+  }
+
+  .btn-glass-primary {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 font-semibold
+           text-primary-foreground cursor-pointer select-none;
+  }
+
+  .btn-glass-primary .liquid-glass-blur {
+    background: linear-gradient(
+      150deg,
+      hsl(var(--primary) / 0.92) 0%,
+      hsl(var(--primary) / 0.75) 50%,
+      hsl(var(--primary) / 0.92) 100%
+    );
+  }
+
+  .btn-glass-primary .liquid-glass-chrome {
+    border-color: hsl(var(--primary-foreground) / 0.25);
+  }
+
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
